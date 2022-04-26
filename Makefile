@@ -1,6 +1,7 @@
 SOUS_REPERTOIRES = src
 
-all : sous_repertoires
+all : sous_repertoires run
+
 .PHONY : all doc sous_repertoires $(SOUS_REPERTOIRES) clean
 
 doc :
@@ -17,3 +18,5 @@ clean :
 	  $(MAKE) -k -C $$rep clean; \
 	done
 
+run :
+	./bin/fourmis

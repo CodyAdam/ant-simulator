@@ -14,7 +14,7 @@ static unsigned int windowHeight() { return 700; }
 /// </summary>
 /// <param name="key">The key.</param>
 /// <param name="environment">The environment.</param>
-void onKeyPressed(char key, Environment * environment)
+void onKeyPressed(char key, Environment *environment)
 {
 	std::cout << "Key pressed: " << key << std::endl;
 }
@@ -35,7 +35,8 @@ void onSimulate()
 int main(int /*argc*/, char ** /*argv*/)
 {
 	// 1 - Initialization of SDL
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS/* | SDL_INIT_AUDIO*/) != 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS /* | SDL_INIT_AUDIO*/) != 0)
+	{
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		return 1;
 	}
@@ -51,9 +52,9 @@ int main(int /*argc*/, char ** /*argv*/)
 	// The main event loop...
 	SDL_Event event;
 	bool exit = false;
-	while (!exit) 
+	while (!exit)
 	{
-		// 1 - We handle events 
+		// 1 - We handle events
 		while (SDL_PollEvent(&event))
 		{
 			if ((event.type == SDL_QUIT) || (event.type == SDL_KEYDOWN && event.key.keysym.sym == 'q'))

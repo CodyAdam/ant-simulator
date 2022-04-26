@@ -15,7 +15,7 @@
 /// </summary>
 class Environment
 {
-public:	
+public:
 	/// <summary>
 	/// Anything inheriting from this class can be placed, moved and perceived in the environment.
 	/// </summary>
@@ -24,12 +24,12 @@ public:
 	public:
 		static float defaultRadius() { return 0.01f; }
 
-	private:		
+	private:
 		/// <summary>
 		/// The position of the element
 		/// </summary>
-		Vector2<float> m_position;		
-		
+		Vector2<float> m_position;
+
 		/// <summary>
 		/// The radius of the entity
 		/// </summary>
@@ -38,7 +38,7 @@ public:
 		/// <summary>
 		/// The environment in which the element is placed
 		/// </summary>
-		Environment * m_environment;
+		Environment *m_environment;
 
 	public:
 		/// <summary>
@@ -47,40 +47,40 @@ public:
 		/// <param name="environment">The environment.</param>
 		/// <param name="position">The position.</param>
 		/// <param name="radius">The radius of the entity.</param>
-		LocalizedEntity(Environment * environment, const Vector2<float> & position, float radius = defaultRadius());
-		
+		LocalizedEntity(Environment *environment, const Vector2<float> &position, float radius = defaultRadius());
+
 		/// <summary>
 		/// Finalizes an instance of the <see cref="LocalizedEntity"/> class.
 		/// </summary>
 		virtual ~LocalizedEntity();
-		
+
 		/// <summary>
 		/// Gets the position.
 		/// </summary>
 		/// <returns></returns>
-		const Vector2<float> & getPosition() const
+		const Vector2<float> &getPosition() const
 		{
 			return m_position;
 		}
-		
+
 		/// <summary>
 		/// Sets the position.
 		/// </summary>
 		/// <param name="position">The position.</param>
-		void setPosition(const Vector2<float> & position);
-		
+		void setPosition(const Vector2<float> &position);
+
 		/// <summary>
 		/// Translates the element with the provided vector.
 		/// </summary>
 		/// <param name="v">The v.</param>
-		void translate(Vector2<float> const & v);
-				
+		void translate(Vector2<float> const &v);
+
 		/// <summary>
 		/// Sets the radius of the entity
 		/// </summary>
 		/// <param name="radius">The radius.</param>
 		void setRadius(float radius);
-		
+
 		/// <summary>
 		/// Gets the radius of the entity
 		/// </summary>
@@ -94,8 +94,8 @@ public:
 		/// Gets the environment.
 		/// </summary>
 		/// <returns></returns>
-		Environment * getEnvironment() const { return m_environment; }
-		
+		Environment *getEnvironment() const { return m_environment; }
+
 		/// <summary>
 		/// Perceives the environment from the current position, in specified direction, with the specified opening angle and within the provided extent.
 		/// </summary>
@@ -105,7 +105,7 @@ public:
 		/// <param name="minimumDistance">The minimum perception distance.</param>
 		/// <returns></returns>
 		template <class T>
-		::std::vector<T*> perceive(Vector2<float> const & direction, float openingAngle, float extent, float minimumDistance=0.01) const
+		::std::vector<T *> perceive(Vector2<float> const &direction, float openingAngle, float extent, float minimumDistance = 0.01) const
 		{
 			return m_environment->perceive<T>(m_position, direction, openingAngle, extent, minimumDistance);
 		}
@@ -115,41 +115,41 @@ public:
 		/// </summary>
 		/// <returns></returns>
 		template <class T>
-		::std::vector<T*> perceive() const
+		::std::vector<T *> perceive() const
 		{
 			return m_environment->perceive<T>(m_environment->cell(m_position));
 		}
 	};
 
-private:	
+private:
 	/// <summary>
 	/// The width of the environment
 	/// </summary>
 	unsigned int m_sizeX;
-			
+
 	/// <summary>
 	/// The height of the environment
 	/// </summary>
 	unsigned int m_sizeY;
-	
+
 	/// <summary>
 	/// The elements that evolve in the environment. [(int)X,(int)Y] coordinates are the indices in the table.
 	/// </summary>
-	::std::vector< ::std::vector< ::std::set<LocalizedEntity*> > > m_data;
-	
+	::std::vector<::std::vector<::std::set<LocalizedEntity *>>> m_data;
+
 	/// <summary>
 	/// For each cell in which the entity lies, call the provided function with the cell coordinates.
 	/// </summary>
 	/// <param name="entity">The entity.</param>
 	/// <param name="function">The function to call. Its type is void(const Vector2<unsigned int> & cell)</param>
 	template <class Function>
-	void rasterize(LocalizedEntity * entity, const Function & function)
+	void rasterize(LocalizedEntity *entity, const Function &function)
 	{
 		float extent = entity->getRadius();
 		Vector2<float> position = entity->getPosition();
 
 		// For entities with a radius lesser than a cell size, we only rasterize the current cell
-		if(extent<=1.0) 
+		if (extent <= 1.0)
 		{
 			function(cell(position));
 			return;
@@ -166,7 +166,7 @@ private:
 			for (unsigned int y = minY; y < maxY; ++y)
 			{
 				Rectangle cellShape(Vector2<float>((float)x, (float)y), Vector2<float>(1.0f, 1.0f));
-				if (cellShape.distance(position)>extent)
+				if (cellShape.distance(position) > extent)
 				{
 					continue;
 				}
@@ -174,18 +174,18 @@ private:
 			}
 		}
 	}
-	
+
 	/// <summary>
 	/// Removes the entity from all cells it lies in.
 	/// </summary>
 	/// <param name="entity">The entity.</param>
-	void removeEntity(LocalizedEntity * entity);
-	
+	void removeEntity(LocalizedEntity *entity);
+
 	/// <summary>
 	/// Adds the entity in each cell it covers.
 	/// </summary>
 	/// <param name="entity">The entity.</param>
-	void addEntity(LocalizedEntity * entity);
+	void addEntity(LocalizedEntity *entity);
 
 	/// <summary>
 	/// Clamps the x coordinate given the width of the envionment.
@@ -193,20 +193,20 @@ private:
 	/// <param name="x">The x coordinate.</param>
 	/// <returns></returns>
 	float clampX(float x) const;
-	
+
 	/// <summary>
 	/// Clamps the y coordinate given the height of the environment
 	/// </summary>
 	/// <param name="x">The y coordinate.</param>
 	/// <returns></returns>
 	float clampY(float y) const;
-	
+
 	/// <summary>
 	/// Clamps the provided vector given the width and the height of the environment
 	/// </summary>
 	/// <param name="p">The p.</param>
 	/// <returns></returns>
-	Vector2<float> clamp(const Vector2<float> & p) const;
+	Vector2<float> clamp(const Vector2<float> &p) const;
 
 	/// <summary>
 	/// Determines whether the specified cell is valid.
@@ -215,7 +215,7 @@ private:
 	/// <returns>
 	///   <c>true</c> if the specified cell is valid; otherwise, <c>false</c>.
 	/// </returns>
-	bool isValid(const Vector2<unsigned int> & cell) const;
+	bool isValid(const Vector2<unsigned int> &cell) const;
 
 public:
 	/// <summary>
@@ -224,7 +224,6 @@ public:
 	/// <param name="width">The width of the environment.</param>
 	/// <param name="height">The height of the environment.</param>
 	Environment(unsigned int width, unsigned int height);
-	
 
 	/// <summary>
 	/// Gets the width of the environment
@@ -243,7 +242,7 @@ public:
 	{
 		return (float)m_sizeY;
 	}
-	
+
 	/// <summary>
 	/// Gets a random position in the environment
 	/// </summary>
@@ -258,7 +257,7 @@ public:
 	/// </summary>
 	/// <param name="position">The cell coordinates.</param>
 	/// <returns></returns>
-	Vector2<unsigned int> cell(Vector2<float> const & position) const;
+	Vector2<unsigned int> cell(Vector2<float> const &position) const;
 
 	/// <summary>
 	/// Perceives entities located in a provided cell.
@@ -267,14 +266,14 @@ public:
 	/// <param name="T">The type of the entities that should be perceived. Warning, this type must inherit from LocalizedEntity.
 	/// <returns>The entities of type T located in the cell. </returns>
 	template <class T>
-	::std::vector<T*> perceive(const Vector2<unsigned int> & cell) const
+	::std::vector<T *> perceive(const Vector2<unsigned int> &cell) const
 	{
 		assert(isValid(cell) && "Environment::perceive: invalid cell provided. Please, use Environment::cell to convert your coordinates");
-		const ::std::set<LocalizedEntity*> & elements = m_data[cell[0]][cell[1]];
-		::std::vector<T*> result;
+		const ::std::set<LocalizedEntity *> &elements = m_data[cell[0]][cell[1]];
+		::std::vector<T *> result;
 		for (auto it = elements.begin(), end = elements.end(); it != end; ++it)
 		{
-			T * current = dynamic_cast<T*>(*it);
+			T *current = dynamic_cast<T *>(*it);
 			if (current != nullptr) // If the type of the entity is the expected one, we add it in the result
 			{
 				result.push_back(current);
@@ -293,12 +292,12 @@ public:
 	/// <param name="minimumDistance">The minimum perception distance i.e. the distance under which element are not perceived.</param>
 	/// <returns></returns>
 	template <class T>
-	::std::vector<T*> perceive(Vector2<float> const & position, const Vector2<float> & direction, float openingAngle, float extent, float minimumDistance=0.01f) const
+	::std::vector<T *> perceive(Vector2<float> const &position, const Vector2<float> &direction, float openingAngle, float extent, float minimumDistance = 0.01f) const
 	{
 		float cosAngle = cos(openingAngle);
 		Vector2<float> dir = direction / direction.norm();
 
-		::std::vector<T*> result;
+		::std::vector<T *> result;
 
 		unsigned int minX = (unsigned int)::std::floor(::std::max(position[0] - extent, 0.0f));
 		unsigned int maxX = (unsigned int)::std::ceil(::std::min(position[0] + extent, float(m_sizeX - 1)));
@@ -310,19 +309,19 @@ public:
 			for (unsigned int y = minY; y < maxY; ++y)
 			{
 				Rectangle cellShape(Vector2<float>((float)x, (float)y), Vector2<float>(1.0f, 1.0f));
-				if (cellShape.distance(position)>extent)
+				if (cellShape.distance(position) > extent)
 				{
 					continue;
 				}
 
-				const ::std::set<LocalizedEntity*> & current = m_data[x][y];
+				const ::std::set<LocalizedEntity *> &current = m_data[x][y];
 				for (auto it = current.begin(), end = current.end(); it != end; ++it)
 				{
 					Vector2<float> targetDirection = (*it)->getPosition() - position;
 					targetDirection = targetDirection / targetDirection.norm();
-					if (dir * targetDirection >= cosAngle && (position - (*it)->getPosition()).norm() < (*it)->getRadius()+extent && (position - (*it)->getPosition()).norm()>minimumDistance)
+					if (dir * targetDirection >= cosAngle && (position - (*it)->getPosition()).norm() < (*it)->getRadius() + extent && (position - (*it)->getPosition()).norm() > minimumDistance)
 					{
-						T * element = dynamic_cast<T*>(*it);
+						T *element = dynamic_cast<T *>(*it);
 						if (element != nullptr)
 						{
 							result.push_back(element);
@@ -339,18 +338,18 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	template <class T>
-	::std::vector<T*> getAllInstancesOf() const
+	::std::vector<T *> getAllInstancesOf() const
 	{
-		::std::set<T*> result;
+		::std::set<T *> result;
 		for (size_t x = 0; x < getWidth(); ++x)
 		{
 			for (size_t y = 0; y < getHeight(); ++y)
 			{
-				std::vector<T*> tmp = perceive<T>(Vector2<unsigned int>(x, y));
+				std::vector<T *> tmp = perceive<T>(Vector2<unsigned int>(x, y));
 				std::copy(tmp.begin(), tmp.end(), std::inserter(result, result.begin()));
 			}
 		}
-		std::vector<T*> realResult(result.size());
+		std::vector<T *> realResult(result.size());
 		std::copy(result.begin(), result.end(), realResult.begin());
 		return realResult;
 	}

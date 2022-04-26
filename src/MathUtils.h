@@ -13,17 +13,17 @@
 /// Namespace containing useful mathematical functions and constants
 /// </summary>
 namespace MathUtils
-{	
+{
 	/// <summary>
 	/// pi value
 	/// </summary>
 	static const float pi = (float)acos(-1.0);
-	
+
 	/// <summary>
 	/// pi/2.0 value
 	/// </summary>
 	static const float piDiv2 = (float)(acos(-1.0) / 2.0);
-		
+
 	/// <summary>
 	/// Given the surface of a circle, this function computes its radius.
 	/// </summary>
@@ -42,7 +42,7 @@ namespace MathUtils
 	{
 		return (float)rand() / (float)RAND_MAX;
 	}
-	
+
 	/// <summary>
 	/// Returns a random value in the interval [min;max].
 	/// </summary>
@@ -52,9 +52,9 @@ namespace MathUtils
 	inline float random(float min, float max)
 	{
 		assert((max >= min) && "Invalid interval in MathUtils::random(float, float)");
-		return min + random()*(max - min);
+		return min + random() * (max - min);
 	}
-	
+
 	/// <summary>
 	/// Clamps the specified value in the interval [min;max].
 	/// </summary>
@@ -67,21 +67,24 @@ namespace MathUtils
 		assert(max >= min && "MathUtils::clamp: Invalid interval");
 		return ::std::max(::std::min(value, max), min);
 	}
-	
+
 	/// <summary>
 	/// Randomly chooses an index in the provided table with a probability proportional to its associated weight
 	/// </summary>
 	/// <param name="weights">The table of weights.</param>
 	/// <returns> The index of the chosen element. </returns>
-	inline unsigned int randomChoose(const std::vector<float> & weights)
+	inline unsigned int randomChoose(const std::vector<float> &weights)
 	{
 		assert(weights.size() > 0 && "MathUtils::randomChoose: Invalid weight vector, size must be greater than one");
 		::std::vector<float> accumulation(weights.size());
 		::std::partial_sum(weights.begin(), weights.end(), accumulation.begin());
-		float value = MathUtils::random()*accumulation.back();
+		float value = MathUtils::random() * accumulation.back();
 		auto it = ::std::lower_bound(accumulation.begin(), accumulation.end(), value);
 		unsigned int index = it - accumulation.begin();
-		if (index == accumulation.size()) { --index; }
+		if (index == accumulation.size())
+		{
+			--index;
+		}
 		return index;
 	}
 };

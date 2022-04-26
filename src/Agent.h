@@ -5,27 +5,23 @@
 
 class Agent : private Environment::LocalizedEntity
 {
-  private:
-  /* data */
+private:
+  Evironment *m_env;
+  Vector2<float> m_pos;
+  float m_radius;
+  Status m_status;
+
+  static std::set<Agent*> m_agents;
+
+  typedef enum { running, destroy } Status;
 public:
-  Agent(/* args */);
+  Agent(const Environment *env, const Vector2<float> initPos, const float radius = Environment::LocalizedEntity::defaultRadius());
   ~Agent();
+  virtual void update(); 
+  Status getStatus();
+  void setStatus(Status status);
+  static void simulate();
+  static void finalize();
 };
 
-Agent::Agent(const Environment *env)
-{
-  
-}
-
-Agent::~Agent()
-{
-}
-
 #endif
-
-
-// Créez la classe Agent qui devra hériter de la classe Environment::LocalizedEntity. Cet
-// agent disposera dun constructeur prenant en paramètre un pointeur sur une instance de la classe
-// TP de C++ (module PROG 2)
-// Environnement,  sa  position  initiale  ainsi  que  son  rayon  qui  par  défaut  prendra  la  valeur
-// Environment::LocalizedEntity::defaultRadius().

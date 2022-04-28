@@ -5,9 +5,13 @@
 #include <Renderer.h>
 #include <time.h>
 #include <Timer.h>
+#include <Agent.h>
+#include <Food.h>
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
+static float targetTPS() { return 10.0f; } // Target tick per second (TPS)
+static float getTPS() { return 1 / Timer::dt(); }
 
 /// <summary>
 /// called each time a key is pressed.
@@ -17,13 +21,31 @@ static unsigned int windowHeight() { return 700; }
 void onKeyPressed(char key, Environment *environment)
 {
 	std::cout << "Key pressed: " << key << std::endl;
+	switch (key)
+	{
+	case 'f':
+		// add a new food on the environment
+		new Food(environment, environment->randomPosition(), 100.0f);
+		break;
+	}
 }
 
 /// <summary>
-/// Called at each time step.
+/// Called at each time step. Used only to do computation.
 /// </summary>
 void onSimulate()
 {
+	Agent::simulate();
+}
+
+/// <summary>
+/// Called at each frame. Used to render the scene.
+/// </summary>
+void onRender()
+{
+	// draw a string on the top left corner that says "TPS: xxx"
+	Renderer::getInstance()->drawString(Vector2<float>(10, 10), "TPS: " + std::to_string(getTPS()), Renderer::Color(103, 110, 114, 255));
+	Renderer::getInstance()->flush();
 }
 
 /// <summary>
@@ -52,6 +74,7 @@ int main(int /*argc*/, char ** /*argv*/)
 	// The main event loop...
 	SDL_Event event;
 	bool exit = false;
+	float lastTime = 0.0f;
 	while (!exit)
 	{
 		// 1 - We handle events
@@ -68,15 +91,24 @@ int main(int /*argc*/, char ** /*argv*/)
 				onKeyPressed((char)event.key.keysym.sym, &environment);
 			}
 		}
+		float nowTime = SDL_GetTicks() / 1000.0f;
+		Timer::update(nowTime - lastTime);
 		// 2 - We update the simulation
-		Timer::update(0.5);
-		onSimulate();
-		// 3 - We render the scene
-		Renderer::getInstance()->flush();
+
+		// simulate only if necessary (to fit the target TPS)
+		if (Timer::dt() > 1.0f / targetTPS())
+		{
+			lastTime = nowTime;
+			onSimulate();
+		}
+		onRender();
 	}
 
 	std::cout << "Shutting down renderer..." << std::endl;
 	Renderer::finalize();
+
+	std::cout << "Shutting down agents..." << std::endl;
+	Agent::finalize();
 
 	std::cout << "Shutting down SDL" << std::endl;
 	SDL_Quit();

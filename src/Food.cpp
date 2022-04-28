@@ -42,5 +42,5 @@ void Food::update()
     m_needRadiusUpdate = false;
     setRadius(MathUtils::circleRadius(m_quantity));
   }
-  Renderer::getInstance()->drawCircle(getPosition(), getRadius(), Renderer::Color(154, 235, 38, 25));
+  Renderer::getInstance()->drawCircle(getPosition(), getRadius(), Renderer::Color(169, 206, 81, 255));
 }

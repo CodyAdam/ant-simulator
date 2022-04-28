@@ -12,9 +12,10 @@ std::unique_ptr<Renderer> Renderer::m_singleton = nullptr;
 /// <param name="height">The height of the render window.</param>
 
 Renderer::Renderer(unsigned int width, unsigned int height)
-	: m_width(width), m_height(height)
+		: m_width(width), m_height(height)
 {
-	if (SDL_CreateWindowAndRenderer(m_width, m_height, SDL_WINDOW_SHOWN, &window, &renderer)) {
+	if (SDL_CreateWindowAndRenderer(m_width, m_height, SDL_WINDOW_SHOWN, &window, &renderer))
+	{
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
 		exit(3);
 	}
@@ -32,9 +33,10 @@ Renderer::~Renderer()
 
 void Renderer::flushPixels()
 {
-	if (m_pixels.size()>0)
+	if (m_pixels.size() > 0)
 	{
-		auto compare = [](const std::pair<Color, SDL_Point> & v1, const std::pair<Color, SDL_Point> & v2) { return v1.first < v2.first; };
+		auto compare = [](const std::pair<Color, SDL_Point> &v1, const std::pair<Color, SDL_Point> &v2)
+		{ return v1.first < v2.first; };
 		::std::sort(m_pixels.begin(), m_pixels.end(), compare);
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 		::std::vector<SDL_Point> tmp;
@@ -48,7 +50,7 @@ void Renderer::flushPixels()
 			}
 			else
 			{
-				SDL_Point * points = &tmp[0];
+				SDL_Point *points = &tmp[0];
 				SDL_SetRenderDrawColor(renderer, lastColor[0], lastColor[1], lastColor[2], lastColor[3]);
 				SDL_RenderDrawPoints(renderer, points, tmp.size());
 				tmp.erase(tmp.begin(), tmp.end());
@@ -56,7 +58,7 @@ void Renderer::flushPixels()
 				tmp.push_back(m_pixels[cpt].second);
 			}
 		}
-		SDL_Point * points = &tmp[0];
+		SDL_Point *points = &tmp[0];
 		SDL_SetRenderDrawColor(renderer, lastColor[0], lastColor[1], lastColor[2], lastColor[3]);
 		SDL_RenderDrawPoints(renderer, points, tmp.size());
 		m_pixels.erase(m_pixels.begin(), m_pixels.end());
@@ -95,9 +97,9 @@ void Renderer::flushCircles()
 /// <param name="coordinates">The coordinates.</param>
 /// <param name="color">The color.</param>
 
-void Renderer::drawPixel(Vector2<float> const & coordinates, const Color & color)
+void Renderer::drawPixel(Vector2<float> const &coordinates, const Color &color)
 {
-	m_pixels.push_back({ color,{ (Sint16)coordinates[0], (Sint16)coordinates[1] } });
+	m_pixels.push_back({color, {(Sint16)coordinates[0], (Sint16)coordinates[1]}});
 }
 
 /// <summary>
@@ -107,9 +109,9 @@ void Renderer::drawPixel(Vector2<float> const & coordinates, const Color & color
 /// <param name="radius">The radius.</param>
 /// <param name="color">The color.</param>
 
-void Renderer::drawCircle(Vector2<float> const & center, float radius, const Color & color)
+void Renderer::drawCircle(Vector2<float> const &center, float radius, const Color &color)
 {
-	Circle circle = { center, radius, color };
+	Circle circle = {center, radius, color};
 	m_circles.push_back(circle);
 }
 
@@ -120,9 +122,9 @@ void Renderer::drawCircle(Vector2<float> const & center, float radius, const Col
 /// <param name="str">The string.</param>
 /// <param name="color">The color.</param>
 
-void Renderer::drawString(Vector2<float> const & position, const::std::string & str, const Color & color)
+void Renderer::drawString(Vector2<float> const &position, const ::std::string &str, const Color &color)
 {
-	String tmp = { position, color, str };
+	String tmp = {position, color, str};
 	m_strings.push_back(tmp);
 }
 
@@ -138,7 +140,7 @@ void Renderer::flush()
 	flushStrings();
 	// After drawing
 	SDL_RenderPresent(renderer);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 45, 42, 46, 255);
 	SDL_RenderClear(renderer);
 }
 

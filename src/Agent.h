@@ -3,27 +3,24 @@
 
 #include <Environment.h>
 
-class Agent : private Environment::LocalizedEntity
+class Agent : public Environment::LocalizedEntity
 {
-private:
+public:
   typedef enum
   {
     running,
     destroy
   } Status;
 
-  Environment *m_env;
-  Vector2<float> m_pos;
-  float m_radius;
+private:
   Status m_status;
-
-  static std::set<Agent *> m_agents;
+  inline static std::set<Agent *> agents = std::set<Agent *>();
 
 public:
-  Agent(const Environment *env, const Vector2<float> initPos, const float radius = Environment::LocalizedEntity::defaultRadius());
+  Agent(Environment *env, const Vector2<float> initPos, const float radius = Environment::LocalizedEntity::defaultRadius());
   ~Agent();
-  virtual void update();
-  Status getStatus();
+  virtual void update() = 0;
+  Status getStatus() const;
   void setStatus(Status status);
   static void simulate();
   static void finalize();

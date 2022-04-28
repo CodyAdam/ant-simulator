@@ -1,17 +1,17 @@
 #include <Agent.h>
 
-Agent::Agent(const Environment *env, const Vector2<float> initPos, const float radius)
-    : m_env(env), m_pos(initPos), m_radius(radius), m_status(running)
+Agent::Agent(Environment *env, const Vector2<float> initPos, const float radius)
+    : LocalizedEntity(env, initPos, radius), m_status(Status::running)
 {
-  Agent.m_agents.insert(this);
+  agents.insert(this);
 }
 
 Agent::~Agent()
 {
-  Agent.m_agents.erase(this);
+  agents.erase(this);
 }
 
-Status Agent::getStatus()
+Agent::Status Agent::getStatus() const
 {
   return m_status;
 }
@@ -21,36 +21,30 @@ void Agent::setStatus(Status status)
   m_status = status;
 }
 
-static void Agent::simulate()
+void Agent::simulate()
 {
-  for (const *Agent agent : Agent.m_agents)
+  std::set<Agent *>::iterator it = agents.begin();
+  while (it != agents.end())
   {
-    if (agent.m_status == running)
-      agent.update()
+    if ((*it)->m_status == Status::running)
+    {
+      (*it)->update();
+      it++;
+    }
+    else
+      it = agents.erase(it);
   }
+  finalize();
 }
 
-static void finalize()
+void Agent::finalize()
 {
-  std::set<Agent *>::iterator it = m_agents.begin();
-  while (it != it.end())
+  std::set<Agent *>::iterator it = agents.begin();
+  while (it != agents.end())
   {
-    if (it->)
-  }
-}
-
-vector<vector<Point>>::iterator track = tracks_.begin();
-while (track != tracks_.end())
-{
-  if (track->empty())
-  {
-    // if track is empty, remove it
-    track = tracks_.erase(track);
-  }
-  else
-  {
-    // if there are points, deque
-    track->erase(track->begin());
-    ++track;
+    if ((*it)->m_status == Status::destroy)
+      it = agents.erase(it);
+    else
+      it++;
   }
 }

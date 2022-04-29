@@ -1,14 +1,14 @@
 #include <Agent.h>
+#include <iostream>
 
 Agent::Agent(Environment *env, const Vector2<float> initPos, const float radius)
     : LocalizedEntity(env, initPos, radius), m_status(Status::running)
 {
-  agents.insert(this);
+  s_agents.insert(this);
 }
 
 Agent::~Agent()
 {
-  agents.erase(this);
 }
 
 Agent::Status Agent::getStatus() const
@@ -23,28 +23,34 @@ void Agent::setStatus(Status status)
 
 void Agent::simulate()
 {
-  std::set<Agent *>::iterator it = agents.begin();
-  while (it != agents.end())
+
+  auto it = s_agents.begin();
+  while (it != s_agents.end())
   {
-    if ((*it)->m_status == Status::running)
+    Agent *agent = *it;
+    if (agent->getStatus() == running)
     {
-      (*it)->update();
+      agent->update();
       it++;
     }
     else
-      it = agents.erase(it);
+    {
+      it = s_agents.erase(it);
+      delete agent;
+    }
   }
-  finalize();
+}
+
+void Agent::render()
+{
+  for (auto agent : s_agents)
+    if (agent->getStatus() == running)
+      agent->draw();
 }
 
 void Agent::finalize()
 {
-  std::set<Agent *>::iterator it = agents.begin();
-  while (it != agents.end())
-  {
-    if ((*it)->m_status == Status::destroy)
-      it = agents.erase(it);
-    else
-      it++;
-  }
+  for (auto agent : s_agents)
+    delete agent;
+  s_agents.clear();
 }

@@ -7,11 +7,12 @@
 #include <Timer.h>
 #include <Agent.h>
 #include <Food.h>
+#include <Anthill.h>
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
 static float targetTPS() { return 10.0f; } // Target tick per second (TPS)
-static float getTPS() { return 1 / Timer::dt(); }
+static float getSpeedModifier() { return 1.0f; };
 
 /// <summary>
 /// called each time a key is pressed.
@@ -20,12 +21,19 @@ static float getTPS() { return 1 / Timer::dt(); }
 /// <param name="environment">The environment.</param>
 void onKeyPressed(char key, Environment *environment)
 {
-	std::cout << "Key pressed: " << key << std::endl;
+	// std::cout << "Key pressed: " << key << std::endl;
 	switch (key)
 	{
+	case 'a':
+		new Anthill(environment, environment->randomPosition());
+		break;
 	case 'f':
-		// add a new food on the environment
-		new Food(environment, environment->randomPosition(), 100.0f);
+		new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
+		break;
+	case 'd':
+		auto foods = environment->getAllInstancesOf<Food>();
+		if (foods.size() > 0)
+			foods[0]->setStatus(Agent::Status::destroy);
 		break;
 	}
 }
@@ -43,9 +51,28 @@ void onSimulate()
 /// </summary>
 void onRender()
 {
-	// draw a string on the top left corner that says "TPS: xxx"
-	Renderer::getInstance()->drawString(Vector2<float>(10, 10), "TPS: " + std::to_string(getTPS()), Renderer::Color(103, 110, 114, 255));
-	Renderer::getInstance()->flush();
+	Renderer *r = Renderer::getInstance();
+
+	// Render the HUD
+	Renderer::Color hudTextColor = Renderer::Color(103, 110, 114, 255);
+	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 0),
+								"TPS: " + std::to_string(Timer::tps()), hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 1),
+								"FPS: " + std::to_string(Timer::fps()), hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 3),
+								"Controls:", hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 4),
+								"A: Add Anthill", hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 5),
+								"F: Add Food", hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 6),
+								"D: Remove Food", hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 7),
+								"Q: Quit", hudTextColor);
+
+	Agent::render();
+
+	r->flush();
 }
 
 /// <summary>
@@ -74,7 +101,11 @@ int main(int /*argc*/, char ** /*argv*/)
 	// The main event loop...
 	SDL_Event event;
 	bool exit = false;
-	float lastTime = 0.0f;
+	float lastUpdateIncremental = SDL_GetTicks() / 1000.0f;
+	int tpsCounter = 0;
+	int fpsCounter = 0;
+	float lastFpsTimer = SDL_GetTicks() / 1000.0f;
+	float lastTpsTimer = SDL_GetTicks() / 1000.0f;
 	while (!exit)
 	{
 		// 1 - We handle events
@@ -86,22 +117,47 @@ int main(int /*argc*/, char ** /*argv*/)
 				exit = true;
 				break;
 			}
-			if (event.type == SDL_KEYDOWN)
+			if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
 			{
 				onKeyPressed((char)event.key.keysym.sym, &environment);
 			}
 		}
-		float nowTime = SDL_GetTicks() / 1000.0f;
-		Timer::update(nowTime - lastTime);
 		// 2 - We update the simulation
+		float now = SDL_GetTicks() / 1000.0f;
 
+		// Custom Tick Per Second system : we split the logic from the rendering
+		// This allow us to have constant TPS and a more stable simulation
+		// We can also change the speed of the simulation easily
+		Timer::update(now - lastUpdateIncremental);
+		float targetTickDuration = 1.0f / (targetTPS() * getSpeedModifier());
 		// simulate only if necessary (to fit the target TPS)
-		if (Timer::dt() > 1.0f / targetTPS())
+		while (now - lastUpdateIncremental > targetTickDuration)
 		{
-			lastTime = nowTime;
 			onSimulate();
+			lastUpdateIncremental += targetTickDuration;
+			Timer::update(0.0f); // reset the delta time
+
+			// Update the TPS counter
+			if (now - lastTpsTimer > 1.0f)
+			{
+				lastTpsTimer = now;
+				Timer::setTps(tpsCounter);
+				tpsCounter = 0;
+			}
+			tpsCounter++;
 		}
+
+		// 3 - We render the scene
 		onRender();
+
+		// 4 - We update the FPS counter
+		if (now - lastFpsTimer > 1.0f)
+		{
+			lastFpsTimer = now;
+			Timer::setFps(fpsCounter);
+			fpsCounter = 0;
+		}
+		fpsCounter++;
 	}
 
 	std::cout << "Shutting down renderer..." << std::endl;

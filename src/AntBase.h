@@ -38,16 +38,27 @@ private:
   Vector2<float> m_direction;
   float m_lifeTime;
   float m_foodQuantity;
-  const float m_maxFoodQuantity = 5.0f;
   Anthill *m_anthill;
 
-  void lookAround();
+  template <class T>
+  std::vector<T *> getVisible()
+  {
+    std::vector<T *> all = getEnvironment()->getAllInstancesOf<T>();
+    std::vector<T *> visibleFoods = {};
+    std::copy_if(all.begin(), all.end(), std::back_inserter(visibleFoods), [this](T *food)
+                 { return food->getPosition().distance(getPosition()) < CONE_RANGE &&
+                          food->getPosition().angle(getPosition()) < CONE_ANGLE; });
+    return visibleFoods;
+  }
   void lookAt(const Vector2<float> &target);
   void move();
   void turn(float angle);
   void flipDirection();
   void dropFood(float quantity);
   float harvest();
+  static float MAX_FOOD_QUANTITY;
+  static float CONE_ANGLE;
+  static float CONE_RANGE;
 
 public:
   AntBase(Environment *env, Anthill *anthill, const float speed);

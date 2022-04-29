@@ -11,6 +11,8 @@ Agent::~Agent()
 {
 }
 
+std::set<Agent *> Agent::s_agents = std::set<Agent *>();
+
 Agent::Status Agent::getStatus() const
 {
   return m_status;

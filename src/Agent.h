@@ -14,7 +14,7 @@ public:
 
 private:
   Status m_status;
-  inline static std::set<Agent *> s_agents = std::set<Agent *>();
+  static std::set<Agent *> s_agents;
 
 public:
   Agent(Environment *env, const Vector2<float> initPos, const float radius = Environment::LocalizedEntity::defaultRadius());

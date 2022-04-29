@@ -153,6 +153,16 @@ public:
 	}
 
 	/// <summary>
+	/// Computes the angle between two vectors without the sign between 0 and pi. (in radians)
+	/// </summary>
+	/// <param name="v">The other vector.</param>
+	/// <returns></returns>
+	Scalar angle(const Vector2 &v) const
+	{
+		return acos((*this) * v / (norm() * v.norm()));
+	}
+
+	/// <summary>
 	/// Computes the distance between two points which coordinates are this vector and the provided one.
 	/// </summary>
 	/// <param name="v">The distance.</param>

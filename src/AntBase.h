@@ -33,38 +33,29 @@ position ou d'un point vert (128,255,128,255) si elle transporte de la nourritur
 */
 class AntBase : public Agent
 {
-private:
+protected:
   float m_speed;
   Vector2<float> m_direction;
   float m_lifeTime;
   float m_foodQuantity;
   Anthill *m_anthill;
 
-  template <class T>
-  std::vector<T *> getVisible()
-  {
-    std::vector<T *> all = getEnvironment()->getAllInstancesOf<T>();
-    std::vector<T *> visibleFoods = {};
-    std::copy_if(all.begin(), all.end(), std::back_inserter(visibleFoods), [this](T *food)
-                 { return food->getPosition().distance(getPosition()) < CONE_RANGE &&
-                          food->getPosition().angle(getPosition()) < CONE_ANGLE; });
-    return visibleFoods;
-  }
   void lookAt(const Vector2<float> &target);
   void move();
   void turn(float angle);
   void flipDirection();
   void dropFood(float quantity);
   float harvest();
+
   static float MAX_FOOD_QUANTITY;
   static float CONE_ANGLE;
   static float CONE_RANGE;
 
 public:
-  AntBase(Environment *env, Anthill *anthill, const float speed);
+  AntBase(Environment *env, Anthill *anthill, const float speed = 1);
   ~AntBase();
 
-  void update() override;
+  virtual void update() = 0;
   void draw() const override;
 };
 

@@ -11,7 +11,7 @@
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
-static float targetTPS() { return 10.0f; } // Target tick per second (TPS)
+static float targetTPS() { return 30.0f; } // Target tick per second (TPS)
 static float getSpeedModifier() { return 1.0f; };
 
 /// <summary>

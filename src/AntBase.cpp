@@ -21,8 +21,8 @@ void AntBase::lookAt(const Vector2<float> &target)
 
 void AntBase::move()
 {
-  // You may notice that I don't use the deltaTime here because I implemented a Tick Per Second system which is more efficient.
-  setPosition(getPosition() + m_direction * m_speed);
+  // You may notice that I didn't use the deltaTime here because I implemented a Tick Per Second system which is more efficient.
+  translate(m_direction * m_speed);
 }
 
 void AntBase::turn(float angle)
@@ -52,34 +52,14 @@ void AntBase::dropFood(float quantity)
 float AntBase::harvest()
 {
   float quantity = 0.0f;
-  // for (auto &food : getEnvironment()->getFoods())
-  // {
-  //   if (food->getPosition().distance(getPosition()) < 3.0f)
-  //   {
-  //     quantity += food->getQuantity();
-  //     food->die();
-  //   }
-  // }
+  std::vector<Food *> foodsOnAnt = perceive<Food>();
+  for (Food *food : foodsOnAnt)
+  {
+    // collect as much food as possible from the food on the ant
+    float freeSpace = MAX_FOOD_QUANTITY - m_foodQuantity;
+    m_foodQuantity += food->collectFood(freeSpace);
+  }
   return quantity;
-}
-
-void AntBase::update()
-{
-  if (m_lifeTime > 0.0f)
-  {
-    m_lifeTime -= Timer::dt();
-  }
-  else
-  {
-    setStatus(Status::destroy);
-  }
-  // look toward visible food if there is any
-  std::vector<Food *> visible = getVisible<Food>();
-  if (visible.size() > 0)
-  {
-    lookAt(visible[0]->getPosition());
-  }
-  move();
 }
 
 void AntBase::draw() const

@@ -4,7 +4,7 @@
 #include <Food.h>
 
 AntBase::AntBase(Environment *env, Anthill *anthill, const float speed)
-    : Agent(env, anthill->getPosition(), 1.0f), m_speed(speed), m_direction(Vector2<float>(1.0f, 0.0f).normalized()), m_lifeTime(1000.0f + rand() * 1500.0f), m_foodQuantity(0.0f), m_anthill(anthill)
+    : Agent(env, anthill->getPosition(), 1.0f), m_speed(speed), m_direction(Vector2<float>::random()), m_lifeTime(1000.0f + MathUtils::random() * 1500.0f), m_foodQuantity(0.0f), m_anthill(anthill)
 {
 }
 

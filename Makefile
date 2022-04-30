@@ -8,7 +8,9 @@ doc :
 	rm -fr doc
 	doxygen .doxyfile 1>| .doxy.sor 2>&1
 
-sous_repertoires : $(SOUS_REPERTOIRES)
+sous_repertoires build : $(SOUS_REPERTOIRES)
+
+
 
 $(SOUS_REPERTOIRES):
 	$(MAKE) -k -C $@ all

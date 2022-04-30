@@ -8,6 +8,7 @@
 #include <Agent.h>
 #include <Food.h>
 #include <Anthill.h>
+#include <SillyAnt.h>
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
@@ -22,10 +23,15 @@ static float getSpeedModifier() { return 1.0f; };
 void onKeyPressed(char key, Environment *environment)
 {
 	// std::cout << "Key pressed: " << key << std::endl;
+	Anthill *ah;
 	switch (key)
 	{
 	case 'a':
-		new Anthill(environment, environment->randomPosition());
+		ah = new Anthill(environment, environment->randomPosition());
+		for (int i = 0; i < 50; i++)
+		{
+			new SillyAnt(ah);
+		}
 		break;
 	case 'f':
 		new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));

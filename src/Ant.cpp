@@ -48,7 +48,13 @@ void Ant::update()
   }
   else
   {
-    lookAt(m_anthill->getPosition());
+    Pheromone *visiblePhero = choosePheromone();
+    if (visiblePhero != nullptr)
+      lookAt(visiblePhero->getPosition());
+    else
+    {
+      turn(MathUtils::random(-M_PI / 10, M_PI / 10));
+    }
     std::vector<Anthill *>
         visible = perceive<Anthill>();
     for (Anthill *anthill : visible)
@@ -57,6 +63,7 @@ void Ant::update()
       {
         m_anthill->depositFood(m_foodQuantity);
         m_foodQuantity = 0.0f;
+        flipDirection();
         break;
       }
     }

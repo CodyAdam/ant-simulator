@@ -58,7 +58,7 @@ void onSimulate()
 /// <summary>
 /// Called at each frame. Used to render the scene.
 /// </summary>
-void onRender()
+void onRender(Environment *environment)
 {
 	Renderer *r = Renderer::getInstance();
 
@@ -80,6 +80,11 @@ void onRender()
 								"Q: Quit", hudTextColor);
 	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 10),
 								"Number of Agent: " + std::to_string(Agent::getAgentCount()), hudTextColor);
+
+	for (Anthill *ah : environment->getAllInstances<Anthill>())
+	{
+		r->drawString(ah->getPosition(), std::to_string((int)ah->getQuantity()), Renderer::Color(255, 0, 0, 255));
+	}
 
 	Agent::render();
 
@@ -165,7 +170,7 @@ int main(int /*argc*/, char ** /*argv*/)
 		if (now - lastRender < targetRenderDuration)
 			std::this_thread::sleep_for(std::chrono::milliseconds((int)(2000 * (targetRenderDuration - (now - lastRender)))));
 
-		onRender();
+		onRender(*environment);
 		lastRender = now;
 		// We update the FPS counter
 		if (now - lastFpsTimer > 1.0f)

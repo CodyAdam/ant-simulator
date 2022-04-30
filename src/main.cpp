@@ -9,11 +9,14 @@
 #include <Food.h>
 #include <Anthill.h>
 #include <Ant.h>
+#include <chrono>
+#include <thread>
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
 static float targetTPS() { return 30.0f; } // Target tick per second (TPS)
-static float getSpeedModifier() { return 3.0f; };
+static float maxFPS() { return 30.0f; }		 // Maximum FPS
+static float getSpeedModifier() { return 1.0f; };
 
 /// <summary>
 /// called each time a key is pressed.
@@ -64,7 +67,7 @@ void onRender()
 	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 0),
 								"TPS: " + std::to_string(Timer::tps()), hudTextColor);
 	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 1),
-								"FPS: " + std::to_string(Timer::fps()), hudTextColor);
+								"FPS: " + std::to_string(Timer::fps()) + " (lock :" + std::to_string((int)maxFPS()) + ")", hudTextColor);
 	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 3),
 								"Controls:", hudTextColor);
 	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 4),
@@ -110,8 +113,10 @@ int main(int /*argc*/, char ** /*argv*/)
 	SDL_Event event;
 	bool exit = false;
 	float lastUpdateIncremental = SDL_GetTicks() / 1000.0f;
+	float lastRender = SDL_GetTicks() / 1000.0f;
 	int tpsCounter = 0;
 	int fpsCounter = 0;
+	float targetRenderDuration = 1.0f / maxFPS();
 	float lastFpsTimer = SDL_GetTicks() / 1000.0f;
 	float lastTpsTimer = SDL_GetTicks() / 1000.0f;
 	while (!exit)
@@ -155,10 +160,14 @@ int main(int /*argc*/, char ** /*argv*/)
 			tpsCounter++;
 		}
 
-		// 3 - We render the scene
-		onRender();
+		// 3 - We render the scene (max is maxFPS())
 
-		// 4 - We update the FPS counter
+		if (now - lastRender < targetRenderDuration)
+			std::this_thread::sleep_for(std::chrono::milliseconds((int)(2000 * (targetRenderDuration - (now - lastRender)))));
+
+		onRender();
+		lastRender = now;
+		// We update the FPS counter
 		if (now - lastFpsTimer > 1.0f)
 		{
 			lastFpsTimer = now;

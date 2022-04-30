@@ -2,8 +2,8 @@
 #include <Food.h>
 #include <Timer.h>
 
-SillyAnt::SillyAnt(Anthill *anthill)
-    : AntBase(anthill->getEnvironment(), anthill)
+SillyAnt::SillyAnt(Anthill *anthill, Vector2<float> initPos)
+    : AntBase(anthill, initPos)
 {
 }
 

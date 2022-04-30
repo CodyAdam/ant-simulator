@@ -12,6 +12,7 @@ Anthill::~Anthill()
 
 void Anthill::depositFood(float quantity)
 {
+  m_foodQuantity += quantity;
 }
 
 void Anthill::update()

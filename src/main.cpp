@@ -8,12 +8,12 @@
 #include <Agent.h>
 #include <Food.h>
 #include <Anthill.h>
-#include <SillyAnt.h>
+#include <Ant.h>
 
 static unsigned int windowWidth() { return 1024; }
 static unsigned int windowHeight() { return 700; }
 static float targetTPS() { return 30.0f; } // Target tick per second (TPS)
-static float getSpeedModifier() { return 1.0f; };
+static float getSpeedModifier() { return 3.0f; };
 
 /// <summary>
 /// called each time a key is pressed.
@@ -30,7 +30,7 @@ void onKeyPressed(char key, Environment *environment)
 		ah = new Anthill(environment, environment->randomPosition());
 		for (int i = 0; i < 50; i++)
 		{
-			new SillyAnt(ah);
+			new Ant(ah, Vector2<float>(ah->getPosition() + Vector2<float>::random() * 3.0f));
 		}
 		break;
 	case 'f':
@@ -75,6 +75,8 @@ void onRender()
 								"D: Remove Food", hudTextColor);
 	r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 7),
 								"Q: Quit", hudTextColor);
+	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 10),
+								"Number of Agent: " + std::to_string(Agent::getAgentCount()), hudTextColor);
 
 	Agent::render();
 

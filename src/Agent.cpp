@@ -56,3 +56,8 @@ void Agent::finalize()
     delete agent;
   s_agents.clear();
 }
+
+int Agent::getAgentCount()
+{
+  return s_agents.size();
+}

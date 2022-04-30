@@ -41,7 +41,7 @@ protected:
   Anthill *m_anthill;
 
   void lookAt(const Vector2<float> &target);
-  void move();
+  virtual void move();
   void turn(float angle);
   void flipDirection();
   void dropFood(float quantity);
@@ -52,7 +52,7 @@ protected:
   static float CONE_RANGE;
 
 public:
-  AntBase(Environment *env, Anthill *anthill, const float speed = 1);
+  AntBase(Anthill *anthill, Vector2<float> initPos, const float speed = 1);
   ~AntBase();
 
   virtual void update() = 0;

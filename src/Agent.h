@@ -25,6 +25,7 @@ public:
   void setStatus(Status status);
   static void simulate();
   static void render();
+  static int getAgentCount();
   static void finalize();
 };
 

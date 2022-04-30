@@ -16,7 +16,7 @@ public:
   ~Pheromone();
 
   void addStrength(float amount);
-
+  float getStrength() const;
   void update() override;
   void draw() const override;
 };

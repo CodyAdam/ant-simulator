@@ -7,6 +7,8 @@
 class Anthill : public Agent
 {
 private:
+  float m_foodQuantity;
+
 public:
   Anthill(Environment *env, const Vector2<float> initPos);
   ~Anthill();

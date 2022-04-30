@@ -18,7 +18,10 @@ void Ant::update()
   else
     setStatus(Status::destroy);
 
-  putPheromone(1.0f);
+  if (m_foodQuantity > 0)
+    putPheromone(100.0f);
+  else
+    putPheromone(10.0f);
 
   if (m_foodQuantity < MAX_FOOD_QUANTITY)
   {

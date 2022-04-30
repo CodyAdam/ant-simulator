@@ -10,7 +10,7 @@ Pheromone::~Pheromone()
 {
 }
 
-float Pheromone::DECAY_PER_TICK = 0.01;
+float Pheromone::DECAY_PER_TICK = 1;
 
 void Pheromone::addStrength(float amount)
 {

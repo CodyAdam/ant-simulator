@@ -19,6 +19,11 @@ void Anthill::update()
 {
 }
 
+float Anthill::getFoodQuantity() const
+{
+  return m_foodQuantity;
+}
+
 void Anthill::draw() const
 {
   Renderer::getInstance()->drawCircle(getPosition(), getRadius(), Renderer::Color(99, 220, 232, 255));

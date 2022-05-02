@@ -81,9 +81,9 @@ void onRender(Environment *environment)
 	r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 10),
 								"Number of Agent: " + std::to_string(Agent::getAgentCount()), hudTextColor);
 
-	for (Anthill *ah : environment->getAllInstances<Anthill>())
+	for (Anthill *ah : environment->getAllInstancesOf<Anthill>())
 	{
-		r->drawString(ah->getPosition(), std::to_string((int)ah->getQuantity()), Renderer::Color(255, 0, 0, 255));
+		r->drawString(ah->getPosition() + Vector2<float>(-5, 20), std::to_string((int)ah->getFoodQuantity()), Renderer::Color(255, 0, 0, 255));
 	}
 
 	Agent::render();
@@ -168,9 +168,9 @@ int main(int /*argc*/, char ** /*argv*/)
 		// 3 - We render the scene (max is maxFPS())
 
 		if (now - lastRender < targetRenderDuration)
-			std::this_thread::sleep_for(std::chrono::milliseconds((int)(2000 * (targetRenderDuration - (now - lastRender)))));
+			std::this_thread::sleep_for(std::chrono::milliseconds((int)(1000 * (targetRenderDuration - (now - lastRender)))));
 
-		onRender(*environment);
+		onRender(&environment);
 		lastRender = now;
 		// We update the FPS counter
 		if (now - lastFpsTimer > 1.0f)

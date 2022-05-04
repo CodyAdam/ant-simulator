@@ -47,9 +47,13 @@ protected:
   void dropFood(float quantity);
   float harvest();
 
-  static float MAX_FOOD_QUANTITY;
-  static float CONE_ANGLE;
-  static float CONE_RANGE;
+  static float const MAX_FOOD_QUANTITY;
+  static float const FOOD_ANGLE;
+  static float const FOOD_EXTENT;
+  static float const FOOD_MIN_EXTENT;
+  static float const PHERO_ANGLE;
+  static float const PHERO_EXTENT;
+  static float const PHERO_MIN_EXTENT;
 
 public:
   AntBase(Anthill *anthill, Vector2<float> initPos, const float speed = 1);

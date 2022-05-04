@@ -23,7 +23,7 @@ void AntBasePheromone::putPheromone(float q)
 
 Pheromone *AntBasePheromone::choosePheromone() const
 {
-  std::vector<Pheromone *> pheros = perceive<Pheromone>(m_direction, CONE_ANGLE, PHERO_EXTENT, 3.0f);
+  std::vector<Pheromone *> pheros = perceive<Pheromone>(m_direction, PHERO_ANGLE, PHERO_EXTENT, PHERO_MIN_EXTENT);
   if (pheros.size() > 0)
   {
     std::vector<float> weights = {};

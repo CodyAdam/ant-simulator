@@ -30,7 +30,7 @@ void SillyAnt::update()
 
   // look toward visible food if there is any
   std::vector<Food *>
-      visible = perceive<Food>(m_direction, CONE_ANGLE, CONE_RANGE);
+      visible = perceive<Food>(m_direction, FOOD_ANGLE, FOOD_EXTENT, FOOD_MIN_EXTENT);
   if (visible.size() > 0)
   {
     lookAt(visible[0]->getPosition());

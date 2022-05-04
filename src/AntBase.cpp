@@ -10,9 +10,13 @@ AntBase::AntBase(Anthill *anthill, Vector2<float> initPos, const float speed)
 
 AntBase::~AntBase() {}
 
-float AntBase::MAX_FOOD_QUANTITY = 5.0f;
-float AntBase::CONE_ANGLE = M_PI / 2.0f;
-float AntBase::CONE_RANGE = 3.0f;
+float const AntBase::MAX_FOOD_QUANTITY = 5.0f;
+float const AntBase::FOOD_ANGLE = M_PI / 2.0f;
+float const AntBase::FOOD_EXTENT = 3.0f;
+float const AntBase::FOOD_MIN_EXTENT = 0.01f;
+float const AntBase::PHERO_ANGLE = M_PI / 2.0f;
+float const AntBase::PHERO_EXTENT = 8.0f;
+float const AntBase::PHERO_MIN_EXTENT = 3.0f;
 
 void AntBase::lookAt(const Vector2<float> &target)
 {

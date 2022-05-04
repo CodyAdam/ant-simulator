@@ -9,7 +9,7 @@ class Pheromone : public Agent
 private:
   float m_strength;
 
-  static float DECAY_PER_TICK;
+  static const float PHERO_RADIUS;
 
 public:
   Pheromone(Environment *environment, const Vector2<float> &position, float strength);

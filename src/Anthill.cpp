@@ -19,12 +19,9 @@ void Anthill::update()
 {
 }
 
-float Anthill::getFoodQuantity() const
-{
-  return m_foodQuantity;
-}
-
 void Anthill::draw() const
 {
-  Renderer::getInstance()->drawCircle(getPosition(), getRadius(), Renderer::Color(99, 220, 232, 255));
+  Renderer *r = Renderer::getInstance();
+  r->drawCircle(getPosition(), getRadius(), Renderer::Color(99, 220, 232, 255));
+  r->drawString(getPosition() + Vector2<float>(-5, 20), "Food : " + std::to_string((int)m_foodQuantity), Renderer::Color(240, 240, 240, 255));
 }

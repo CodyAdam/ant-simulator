@@ -26,6 +26,19 @@ void SillyAnt::update()
   else
   {
     lookAt(m_anthill->getPosition());
+    std::vector<Anthill *>
+        ah = perceive<Anthill>();
+    for (Anthill *anthill : ah)
+    {
+      if (anthill == m_anthill)
+      {
+        anthill->depositFood(m_foodQuantity);
+        m_foodQuantity = 0;
+        flipDirection();
+
+        break;
+      }
+    }
   }
 
   // look toward visible food if there is any

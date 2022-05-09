@@ -40,13 +40,7 @@ protected:
   float m_foodQuantity;
   Anthill *m_anthill;
 
-  void lookAt(const Vector2<float> &target);
-  virtual void move();
-  void turn(float angle);
-  void flipDirection();
-  void dropFood(float quantity);
-  float harvest();
-
+public:
   static float const MAX_FOOD_QUANTITY;
   static float const FOOD_ANGLE;
   static float const FOOD_EXTENT;
@@ -55,9 +49,20 @@ protected:
   static float const PHERO_EXTENT;
   static float const PHERO_MIN_EXTENT;
 
-public:
+  void lookAt(const Vector2<float> &target);
+  virtual void move();
+  void turn(float angle);
+  void flipDirection();
+  void dropFood(float quantity);
+  void setFoodQuantity(float quantity);
+  float harvest();
+
   AntBase(Anthill *anthill, Vector2<float> initPos, const float speed = 1);
   ~AntBase();
+
+  float getFoodQuantity() const;
+  Vector2<float> getDirection() const;
+  Anthill *getAnthill() const;
 
   virtual void update() = 0;
   void draw() const override;

@@ -25,7 +25,7 @@ float Pheromone::getStrength() const
 
 void Pheromone::update()
 {
-  if (m_strength <= 0)
+  if (m_strength <= 0.01f)
     setStatus(Status::destroy);
   else
     m_strength *= 0.99;

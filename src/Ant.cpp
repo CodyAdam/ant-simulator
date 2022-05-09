@@ -53,7 +53,7 @@ void Ant::update()
       lookAt(visiblePhero->getPosition());
     else
     {
-      turn(MathUtils::random(-M_PI / 10, M_PI / 10));
+      lookAt(m_anthill->getPosition());
     }
     std::vector<Anthill *>
         visible = perceive<Anthill>();

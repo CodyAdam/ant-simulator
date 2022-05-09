@@ -2,7 +2,7 @@
 #include <Renderer.h>
 
 Anthill::Anthill(Environment *env, const Vector2<float> initPos)
-    : Agent(env, initPos, 10.0f)
+    : Agent(env, initPos, 10.0f), m_foodQuantity(0.0f)
 {
 }
 

@@ -8,7 +8,10 @@ AntBase::AntBase(Anthill *anthill, Vector2<float> initPos, const float speed)
 {
 }
 
-AntBase::~AntBase() {}
+AntBase::~AntBase()
+{
+  dropFood(m_foodQuantity);
+}
 
 float const AntBase::MAX_FOOD_QUANTITY = 5.0f;
 float const AntBase::FOOD_ANGLE = M_PI / 2.0f;
@@ -51,6 +54,21 @@ void AntBase::dropFood(float quantity)
     new Food(getEnvironment(), getPosition(), m_foodQuantity);
     m_foodQuantity = 0.0f;
   }
+}
+
+float AntBase::getFoodQuantity() const
+{
+  return m_foodQuantity;
+}
+
+void AntBase::setFoodQuantity(float quantity)
+{
+  m_foodQuantity = quantity;
+}
+
+Vector2<float> AntBase::getDirection() const
+{
+  return m_direction;
 }
 
 float AntBase::harvest()

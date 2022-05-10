@@ -84,6 +84,11 @@ float AntBase::harvest()
   return quantity;
 }
 
+Anthill *AntBase::getAnthill() const
+{
+  return m_anthill;
+}
+
 void AntBase::draw() const
 {
   if (m_foodQuantity > 0)

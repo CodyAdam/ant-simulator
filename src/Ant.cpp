@@ -14,14 +14,17 @@ Ant::~Ant()
 void Ant::update()
 {
   if (m_lifeTime > 0.0f)
-    m_lifeTime -= Timer::dt();
+    m_lifeTime -= 1;
   else
     setStatus(Status::destroy);
 
+  // Put pheromone, and more if the ant has food and if close to anthill
+  float dist = getAnthill()->getPosition().distance(getPosition());
+  float amout = 100 - 0.2 * dist - 0.0011 * dist * dist;
   if (m_foodQuantity > 0)
-    putPheromone(100.0f);
+    putPheromone(100.0f + amout);
   else
-    putPheromone(10.0f);
+    putPheromone(10.0f + amout);
 
   if (m_foodQuantity < MAX_FOOD_QUANTITY)
   {

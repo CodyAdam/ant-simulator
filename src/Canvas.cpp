@@ -63,20 +63,58 @@ void Canvas::onKeyPressed(char key, Environment *environment)
     SDL_Log("Set game speed to x%.2f", speedModifier);
     break;
   case 'a':
-    SDL_Log("Spawning anthill with 50 ants");
-    ah = new Anthill(environment, environment->randomPosition());
-    for (int i = 0; i < 50; i++)
+    SDL_Log("Spawning anthill with 30 silly ants");
+    ah = new Anthill(environment, environment->randomPosition(), 0);
+    for (int i = 0; i < 30; i++)
     {
       Vector2<float> spawnPos = ah->getPosition();
       // Vector2<float> spawnPos = environment->randomPosition();
       new SillyAnt(ah, spawnPos);
     }
     break;
+  case 'z':
+    SDL_Log("Spawning anthill with 30 pheromone ants");
+    ah = new Anthill(environment, environment->randomPosition(), 1);
+    for (int i = 0; i < 30; i++)
+    {
+      Vector2<float> spawnPos = ah->getPosition();
+      // Vector2<float> spawnPos = environment->randomPosition();
+      new Ant(ah, spawnPos);
+    }
+    break;
+  case 'e':
+    SDL_Log("Spawning anthill with 30 rule pheromone ants");
+    ah = new Anthill(environment, environment->randomPosition(), 2);
+    for (int i = 0; i < 30; i++)
+    {
+      Vector2<float> spawnPos = ah->getPosition();
+      // Vector2<float> spawnPos = environment->randomPosition();
+      new AntWithRules(ah, spawnPos);
+    }
+    break;
   case 'f':
-    SDL_Log("Spawning 3 food randomly");
+    SDL_Log("Spawning 5 food randomly");
     new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
     new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
     new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
+    new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
+    new Food(environment, environment->randomPosition(), MathUtils::random(200.0f, 2000.0f));
+    break;
+  case 'c':
+    SDL_Log("Kill all");
+    for (auto &agent : environment->getAllInstancesOf<Agent>())
+    {
+      agent->setStatus(Agent::Status::destroy);
+    }
+    break;
+  case 'h':
+    SDL_Log("Kill half");
+    for (auto &agent : environment->getAllInstancesOf<Agent>())
+    {
+      // destroy half of the agents randomly
+      if (MathUtils::random(0.0f, 1.0f) > 0.5f)
+        agent->setStatus(Agent::Status::destroy);
+    }
     break;
   case 'd':
     SDL_Log("Removing 1 food randomly");
@@ -111,22 +149,32 @@ void Canvas::onRender(Environment *environment)
   r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 3),
                 "Controls:", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 4),
-                "A: Add Anthill", hudTextColor);
+                "A: Add Anthill of Silly Ants", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 5),
-                "F: Add 3 Foods", hudTextColor);
+                "Z: Add Anthill of Pheromone Ants", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 6),
-                "D: Remove Food", hudTextColor);
+                "E: Add Anthill of Pheromone Ants guided with Rules", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 7),
-                "Q: Quit", hudTextColor);
+                "F: Add 5 Foods", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 8),
-                "<1-9>: Set game speed", hudTextColor);
+                "D: Remove Food", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 9),
-                "0: Pause game", hudTextColor);
+                "C: Kill all", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 10),
-                "-: Lower game speed", hudTextColor);
+                "H: Kill half", hudTextColor);
   r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 11),
+                "D: Remove Food", hudTextColor);
+  r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 12),
+                "Q: Quit", hudTextColor);
+  r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 13),
+                "<1-9>: Set game speed", hudTextColor);
+  r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 14),
+                "0: Pause game", hudTextColor);
+  r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 15),
+                "-: Lower game speed", hudTextColor);
+  r->drawString(Vector2<float>(10 + 15 * 1, 10 + 15 * 16),
                 "+: Increase game speed", hudTextColor);
-  r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 15),
+  r->drawString(Vector2<float>(10 + 15 * 0, 10 + 15 * 19),
                 "Number of Agent: " + std::to_string(Agent::getAgentCount()), hudTextColor);
 
   Agent::render();

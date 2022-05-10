@@ -14,7 +14,7 @@ SillyAnt::~SillyAnt()
 void SillyAnt::update()
 {
   if (m_lifeTime > 0.0f)
-    m_lifeTime -= Timer::dt();
+    m_lifeTime -= 1;
   else
     setStatus(Status::destroy);
 

@@ -1,1 +1,2 @@
-
+This is an empty file so that github create a folder
+if the bin folder is empty github doesn't create one and the make command won't work

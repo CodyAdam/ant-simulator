@@ -17,7 +17,7 @@ float const AntBase::MAX_FOOD_QUANTITY = 5.0f;
 float const AntBase::FOOD_ANGLE = M_PI / 2.0f;
 float const AntBase::FOOD_EXTENT = 3.0f;
 float const AntBase::FOOD_MIN_EXTENT = 0.01f;
-float const AntBase::PHERO_ANGLE = M_PI / 2.0f;
+float const AntBase::PHERO_ANGLE = M_PI / 5.0f;
 float const AntBase::PHERO_EXTENT = 8.0f;
 float const AntBase::PHERO_MIN_EXTENT = 3.0f;
 

@@ -21,7 +21,7 @@ void SillyAnt::update()
   // Turn randomly if not full
   if (m_foodQuantity < MAX_FOOD_QUANTITY)
   {
-    turn(MathUtils::random(-M_PI / 10, M_PI / 10));
+    turn(MathUtils::random(-M_PI / 30, M_PI / 30));
   }
   else
   {

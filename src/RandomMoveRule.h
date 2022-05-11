@@ -20,7 +20,7 @@ public:
 
   void action() override
   {
-    ant->turn(MathUtils::random(-M_PI / 10, M_PI / 10));
+    ant->turn(MathUtils::random(-M_PI / 30, M_PI / 30));
   }
 };
 

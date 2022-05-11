@@ -48,7 +48,7 @@ public:
 
     // Put pheromone, and more if the ant has food and if close to anthill
     float dist = getAnthill()->getPosition().distance(getPosition());
-    float amout = 100 - 0.2 * dist - 0.0011 * dist * dist;
+    float amout = std::max(100.0f - 0.2f * dist - 0.0011f * dist * dist, 0.0f);
     if (m_foodQuantity > 0)
       putPheromone(100.0f + amout);
     else
